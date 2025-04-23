@@ -16,6 +16,21 @@ Each workflow is designed to be practical, clearly structured, and easy to integ
 - Maintains chat context via PostgreSQL memory
 - Built with modular tools: embeddings, chat models, and tool invocation
 
+### 🌐 Brave Search via Telegram (MCP Integration)
+
+This workflow allows users to perform Brave Search queries directly within a Telegram chat. It listens for the command `/brave your search`, cleans the query, retrieves available Brave tools, and executes the search with results sent back as a formatted Telegram message.
+
+- Uses the [n8n-nodes-mcp](https://github.com/nerding-io/n8n-nodes-mcp) community node
+- Integrates Brave Search API via MCP credentials
+- Telegram bot acts as the user interface
+- Search trigger is `/brave ...`
+- Includes rich setup instructions via `Sticky Notes`
+
+> 🛠 Setup Requirements:
+> - Brave API Key (`BRAVE_API_KEY`)
+> - MCP plugin installed on your n8n instance
+> - Telegram bot access token
+
 ---
 
 ## ⚙️ Getting Started
