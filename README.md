@@ -49,15 +49,6 @@ Make sure to configure your own API keys and database connections within your n8
 
 ---
 
-## 📂 Structure
-
-```plaintext
-n8n_workflows/
-├── RAG_Agent.json
-├── README.md
-```
----
-
 ## Created By
 Name: Mariola Martínez
 
