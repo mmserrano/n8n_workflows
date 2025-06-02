@@ -26,11 +26,9 @@ This n8n workflow automates the process of sending ebooks received via Telegram 
    ```
    Replace `<YOUR_BOT_TOKEN>` with the token you received from BotFather. Look for the `chat` object in the JSON response to find your chat ID.
 
-### Step 3: Configure Your Kindle Email
-1. Log in to your Kindle account.
-2. Go to your Amazon account settings and find the "Manage Your Content and Devices" section.
-3. Under the "Preferences" tab, locate your Kindle email address (e.g., `yourname@kindle.com`).
-4. Ensure that your Kindle email is set to receive documents from your Telegram bot's email.
+### Step 3: Configure Google SpreadSheet
+1. Create a new Google Spreadsheet called "Telegram Bot enviar a kindle" (or any other name to be added later in workflow).
+2- The sheet "Hoja 1" must have columns "ID Telegram" and "Email Kindle".
 
 ### Step 4: Prepare the n8n Workflow
 1. Clone the repository or download the `Telegram_send_to_kindle.json` file.
@@ -45,13 +43,10 @@ This n8n workflow automates the process of sending ebooks received via Telegram 
 
 3. Configure the Workflow:
    - Open the imported workflow in n8n.
-   - Locate the Telegram node and replace the following placeholders:
-     - **Bot Token**: `replace-me` (your bot token from BotFather)
-     - **Chat ID**: `replace-me` (your chat ID obtained from the previous step)
-   - Locate the Kindle node and replace the following placeholders:
-     - **Kindle Email**: `replace-me` (your Kindle email address)
-     - **Subject**: `replace-me` (e.g., "New Ebook from Telegram")
-     - **Body**: `replace-me` (e.g., "Here is your ebook!")
+   - Setup your credentials
+   - Locate the following nodes and replace with your information: 
+        - Telegram2: replace your-email-address with the gmail account you will send emails from
+        - "Telegram5", "Telegram6", "Telegram8", "ErrorHandler": replace your-telegram-account by your telegram account's username or email, as you prefer to be contacted.
 
 ### Step 5: Activate the Workflow
 - Once configured, activate the workflow to start monitoring Telegram messages.

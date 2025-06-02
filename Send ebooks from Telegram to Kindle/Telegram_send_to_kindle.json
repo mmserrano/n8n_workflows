@@ -153,7 +153,7 @@
     {
       "parameters": {
         "chatId": "={{ $json[\"ID Telegram\"] }}",
-        "text": "Perfecto. Solo te queda un paso:\n1- Accede a https://www.amazon.es/hz/mycd/myx#/home/settings/payment\n2- Haz click en \"Configuración de documentos personales\" y ve a la sección \"Lista de direcciones de e-mails autorizadas para el envío de documentos personales\"\n3- Haz click en \"Añadir dirección de correo electrónico\" y añade \"replace-me\"\n\n\nListo! Ya puedes enviarme todos los libros que quieras añadir a tu Kindle",
+        "text": "Perfecto. Solo te queda un paso:\n1- Accede a https://www.amazon.es/hz/mycd/myx#/home/settings/payment\n2- Haz click en \"Configuración de documentos personales\" y ve a la sección \"Lista de direcciones de e-mails autorizadas para el envío de documentos personales\"\n3- Haz click en \"Añadir dirección de correo electrónico\" y añade \"your-email-address\"\n\n\nListo! Ya puedes enviarme todos los libros que quieras añadir a tu Kindle",
         "additionalFields": {
           "appendAttribution": false
         }
@@ -230,7 +230,7 @@
     {
       "parameters": {
         "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
-        "text": "Hubo un error al obtener el libro. Envía un formato válido o ponte en contacto con https://t.me/replace-me",
+        "text": "Hubo un error al obtener el libro. Envía un formato válido o ponte en contacto con https://t.me/your-telegram-account",
         "additionalFields": {
           "appendAttribution": false
         }
@@ -254,7 +254,7 @@
     {
       "parameters": {
         "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
-        "text": "=Hubo un error al enviar el libro. Comprueba que la dirección {{ $('Get telegram ID').item.json['Email Kindle'] }} es correcta y ponte en contacto con https://t.me/replace-me",
+        "text": "=Hubo un error al enviar el libro. Comprueba que la dirección {{ $('Get telegram ID').item.json['Email Kindle'] }} es correcta y ponte en contacto con https://t.me/your-telegram-account",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -646,7 +646,7 @@
     {
       "parameters": {
         "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
-        "text": "=Vaya, parece que la dirección indicada ya está enlazada con otra cuenta de Telegram. Para modificarla, ponte en contacto con https://t.me/replace-me",
+        "text": "=Vaya, parece que la dirección indicada ya está enlazada con otra cuenta de Telegram. Para modificarla, ponte en contacto con https://t.me/your-telegram-account",
         "additionalFields": {
           "appendAttribution": false
         }
@@ -670,7 +670,7 @@
     {
       "parameters": {
         "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
-        "text": "=Vaya, parece ha habido un error. Ponte en contacto con https://t.me/replace-me para solucionarlo",
+        "text": "=Vaya, parece ha habido un error. Ponte en contacto con https://t.me/your-telegram-account para solucionarlo",
         "additionalFields": {
           "appendAttribution": false
         }
@@ -682,7 +682,7 @@
         360
       ],
       "id": "34b66f28-724c-4647-87a6-980860ead9d1",
-      "name": "Error handler",
+      "name": "ErrorHandler",
       "webhookId": "9e1c2d77-5a0e-47b7-9a08-cfd570369403",
       "credentials": {
         "telegramApi": {
