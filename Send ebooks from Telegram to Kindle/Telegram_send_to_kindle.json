@@ -1,0 +1,927 @@
+{
+  "name": "Telegram Send to Kindle",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -400,
+        -80
+      ],
+      "id": "fd267f4f-3d0a-4bf9-b02c-0d3e4b96105b",
+      "name": "Telegram Trigger",
+      "webhookId": "23d9829c-0893-490e-ac05-63436182adad",
+      "credentials": {
+        "telegramApi": {
+          "id": "replace_me",
+          "name": "enviar_kindle"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4c13eaec-ca2d-4c08-a5a9-3c6105e48dbe",
+              "leftValue": "={{ $json.message.from.is_bot }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -180,
+        -80
+      ],
+      "id": "50ce7d52-6b5c-470b-b302-4e0cd3348a0e",
+      "name": "If bot, invalid"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.from.id }}",
+        "text": "Lo siento, esta operación no está permitida. Inténtalo desde  una cuenta personal de Telegram",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        40,
+        -180
+      ],
+      "id": "4e64754c-f576-4fad-8089-e26a26d21437",
+      "name": "Telegram",
+      "webhookId": "9e1c2d77-5a0e-47b7-9a08-cfd570369403",
+      "credentials": {
+        "telegramApi": {
+          "id": "replace_me",
+          "name": "enviar_kindle"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "10901f5c-03b6-4b47-94a7-e67f0bcd3d7d",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        400,
+        -100
+      ],
+      "id": "a5aa00e6-3fc6-4be5-b7a4-c00976260a00",
+      "name": "If empty"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "10901f5c-03b6-4b47-94a7-e67f0bcd3d7d",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1620,
+        -320
+      ],
+      "id": "ba8e5def-6974-4014-b896-2c7cdcdfa52d",
+      "name": "If empty1"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json[\"ID Telegram\"] }}",
+        "text": "Perfecto. Solo te queda un paso:\n1- Accede a https://www.amazon.es/hz/mycd/myx#/home/settings/payment\n2- Haz click en \"Configuración de documentos personales\" y ve a la sección \"Lista de direcciones de e-mails autorizadas para el envío de documentos personales\"\n3- Haz click en \"Añadir dirección de correo electrónico\" y añade \"replace-me\"\n\n\nListo! Ya puedes enviarme todos los libros que quieras añadir a tu Kindle",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2840,
+        -300
+      ],
+      "id": "62db1844-7053-49d4-8ad8-8825c2a7c961",
+      "name": "Telegram2",
+      "webhookId": "9e1c2d77-5a0e-47b7-9a08-cfd570369403",
+      "credentials": {
+        "telegramApi": {
+          "id": "replace_me",
+          "name": "enviar_kindle"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Get telegram ID').item.json['Email Kindle'] }}",
+        "subject": "={{ $('Telegram Trigger').item.json.message.caption ?? $('Telegram Trigger').item.json.message.document.file_name ?? $('Telegram Trigger').item.json.message.message_id }}",
+        "message": "={{ $('Telegram Trigger').item.json.message.caption ?? $('Telegram Trigger').item.json.message.document.file_name ?? $('Telegram Trigger').item.json.message.message_id }}",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1220,
+        -80
+      ],
+      "id": "b9b429ae-2cea-4291-b934-f2a4ea951d33",
+      "name": "Gmail",
+      "webhookId": "dcd9caec-d876-4d4e-becf-753d83042d60",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "replace_me",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Telegram Trigger').item.json.message.document.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        960,
+        20
+      ],
+      "id": "0654bb4a-956e-444a-9c67-74772d234716",
+      "name": "Telegram4",
+      "webhookId": "212239b0-0b71-49e5-8388-08b661c607bf",
+      "credentials": {
+        "telegramApi": {
+          "id": "replace_me",
+          "name": "enviar_kindle"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "Hubo un error al obtener el libro. Envía un formato válido o ponte en contacto con https://t.me/replace-me",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1220,
+        140
+      ],
+      "id": "dece619b-145e-478a-8406-8dfb965ae8d2",
+      "name": "Telegram5",
+      "webhookId": "9e1c2d77-5a0e-47b7-9a08-cfd570369403",
+      "credentials": {
+        "telegramApi": {
+          "id": "replace_me",
+          "name": "enviar_kindle"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "=Hubo un error al enviar el libro. Comprueba que la dirección {{ $('Get telegram ID').item.json['Email Kindle'] }} es correcta y ponte en contacto con https://t.me/replace-me",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1480,
+        40
+      ],
+      "id": "2a543820-5119-4004-b50f-4bf51e312ef0",
+      "name": "Telegram6",
+      "webhookId": "9e1c2d77-5a0e-47b7-9a08-cfd570369403",
+      "credentials": {
+        "telegramApi": {
+          "id": "replace_me",
+          "name": "enviar_kindle"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "=El libro se ha enviado a {{ $('Get telegram ID').item.json['Email Kindle'] }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1480,
+        -120
+      ],
+      "id": "01b72841-4d81-40c2-943d-530e90a48980",
+      "name": "Telegram7",
+      "webhookId": "9e1c2d77-5a0e-47b7-9a08-cfd570369403",
+      "credentials": {
+        "telegramApi": {
+          "id": "replace_me",
+          "name": "enviar_kindle"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a2fdb22c-cbc9-4778-b258-a8808c774893",
+              "leftValue": "={{ $('Get telegram ID').item.json['Email Kindle'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        680,
+        -40
+      ],
+      "id": "73cb1893-2d02-42bc-b0e4-f13b24c9da70",
+      "name": "If email set"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1cMAs1IONsPTFK8wfNsSe1GX23XRPTNvqunZ8e2-niwM",
+          "mode": "list",
+          "cachedResultName": "Telegram Bot enviar a kindle",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cMAs1IONsPTFK8wfNsSe1GX23XRPTNvqunZ8e2-niwM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cMAs1IONsPTFK8wfNsSe1GX23XRPTNvqunZ8e2-niwM/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "ID Telegram",
+              "lookupValue": "={{ $json.message.from.id }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        180,
+        0
+      ],
+      "id": "45057531-873f-4b5a-b6f9-5da5e2833901",
+      "name": "Get telegram ID",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "replace_me",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "message": "=Hola {{ $('Telegram Trigger').item.json.message.from.first_name }},\nPor favor, haz click en el botón \"Respond\" justo debajo de este mensaje y escribe tu correo de Kindle.",
+        "responseType": "freeText",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1040,
+        -300
+      ],
+      "id": "c7d9fe47-2bfb-4cbb-bdcf-2efbf0c9f311",
+      "name": "Ask for kindle email",
+      "webhookId": "9e1c2d77-5a0e-47b7-9a08-cfd570369403",
+      "credentials": {
+        "telegramApi": {
+          "id": "replace_me",
+          "name": "enviar_kindle"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1cMAs1IONsPTFK8wfNsSe1GX23XRPTNvqunZ8e2-niwM",
+          "mode": "list",
+          "cachedResultName": "Telegram Bot enviar a kindle",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cMAs1IONsPTFK8wfNsSe1GX23XRPTNvqunZ8e2-niwM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cMAs1IONsPTFK8wfNsSe1GX23XRPTNvqunZ8e2-niwM/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Email Kindle",
+              "lookupValue": "={{ $json.data.text }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1340,
+        -280
+      ],
+      "id": "8a0ac8df-0ba0-402b-8e06-364109a862e6",
+      "name": "Find kindle email",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "replace_me",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1cMAs1IONsPTFK8wfNsSe1GX23XRPTNvqunZ8e2-niwM",
+          "mode": "list",
+          "cachedResultName": "Telegram Bot enviar a kindle",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cMAs1IONsPTFK8wfNsSe1GX23XRPTNvqunZ8e2-niwM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cMAs1IONsPTFK8wfNsSe1GX23XRPTNvqunZ8e2-niwM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID Telegram": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+            "Email Kindle": "={{ $json[\"Email Kindle\"] }}"
+          },
+          "matchingColumns": [
+            "Email Kindle"
+          ],
+          "schema": [
+            {
+              "id": "ID Telegram",
+              "displayName": "ID Telegram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Kindle",
+              "displayName": "Email Kindle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2340,
+        -200
+      ],
+      "id": "cbff6604-b648-4e77-8632-6e5bbfd599d2",
+      "name": "Save telegram ID linked to kindle email",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "replace_me",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1cMAs1IONsPTFK8wfNsSe1GX23XRPTNvqunZ8e2-niwM",
+          "mode": "list",
+          "cachedResultName": "Telegram Bot enviar a kindle",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cMAs1IONsPTFK8wfNsSe1GX23XRPTNvqunZ8e2-niwM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cMAs1IONsPTFK8wfNsSe1GX23XRPTNvqunZ8e2-niwM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID Telegram": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+            "Email Kindle": "={{ $('Ask for kindle email').item.json.data.text }}"
+          },
+          "matchingColumns": [
+            "Email Kindle"
+          ],
+          "schema": [
+            {
+              "id": "ID Telegram",
+              "displayName": "ID Telegram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Kindle",
+              "displayName": "Email Kindle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2320,
+        -400
+      ],
+      "id": "199979ff-c953-44b5-a80a-8cac08c53c5f",
+      "name": "Create telegram ID linked to kindle email",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "replace_me",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d7b7c86e-3b22-4dd1-9ad4-dbfdaf8fa7db",
+              "leftValue": "={{ $json[\"Email Kindle\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1960,
+        -120
+      ],
+      "id": "5b050455-0d4a-429e-9e88-9325fee3d4cc",
+      "name": "If not linked to another"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "=Vaya, parece que la dirección indicada ya está enlazada con otra cuenta de Telegram. Para modificarla, ponte en contacto con https://t.me/replace-me",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2320,
+        20
+      ],
+      "id": "c3e8d64c-5c27-4650-8df4-1ad704674816",
+      "name": "Telegram8",
+      "webhookId": "9e1c2d77-5a0e-47b7-9a08-cfd570369403",
+      "credentials": {
+        "telegramApi": {
+          "id": "replace_me",
+          "name": "enviar_kindle"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "=Vaya, parece ha habido un error. Ponte en contacto con https://t.me/replace-me para solucionarlo",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2600,
+        360
+      ],
+      "id": "34b66f28-724c-4647-87a6-980860ead9d1",
+      "name": "Error handler",
+      "webhookId": "9e1c2d77-5a0e-47b7-9a08-cfd570369403",
+      "credentials": {
+        "telegramApi": {
+          "id": "replace_me",
+          "name": "enviar_kindle"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "If bot, invalid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If bot, invalid": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get telegram ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If empty": {
+      "main": [
+        [
+          {
+            "node": "Ask for kindle email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If email set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If empty1": {
+      "main": [
+        [
+          {
+            "node": "Create telegram ID linked to kindle email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If not linked to another",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram4": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Telegram7",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If email set": {
+      "main": [
+        [
+          {
+            "node": "Telegram4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ask for kindle email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get telegram ID": {
+      "main": [
+        [
+          {
+            "node": "If empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ask for kindle email": {
+      "main": [
+        [
+          {
+            "node": "Find kindle email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find kindle email": {
+      "main": [
+        [
+          {
+            "node": "If empty1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save telegram ID linked to kindle email": {
+      "main": [
+        [
+          {
+            "node": "Telegram2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create telegram ID linked to kindle email": {
+      "main": [
+        [
+          {
+            "node": "Telegram2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If not linked to another": {
+      "main": [
+        [
+          {
+            "node": "Save telegram ID linked to kindle email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f2483749-7381-4762-b034-57f7905de4c3",
+  "meta": {
+    "instanceId": "b1ce8e5c04da7f5185dd4c2f1e26386329ea2f8084595de56b53334d661cd00e"
+  },
+  "id": "Uf197pTji94h5x7i",
+  "tags": []
+}
