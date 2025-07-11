@@ -1,0 +1,725 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7ecfbe72-c09a-482e-8f81-43d9e7bb2917",
+              "leftValue": "={{ $json.pagina_web }}",
+              "rightValue": "(google|gstatic|ggpht|schema|example|wa)",
+              "operator": {
+                "type": "string",
+                "operation": "notRegex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "44a6659b-4fba-4e82-b8cc-192108dde65e",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -600,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "pagina_web",
+        "options": {}
+      },
+      "id": "f54977c1-ec35-424a-97ca-4c7a7f9eb9dd",
+      "name": "Remove Duplicates",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        -380,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Loop Over Items').item.json.pagina_web }}",
+        "options": {}
+      },
+      "id": "f9f368b8-6907-46d1-909a-8fc259424179",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        60,
+        160
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "a82a43c5-7a5b-4d5e-8d03-451e71415882",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -140,
+        440
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json.data;\n\n// Expresión regular para capturar emails válidos (excluyendo extensiones de imagen)\nconst emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.(?!png|jpg|gif|jpeg|webp)[a-zA-Z]{2,}/g;\n\n// Extraer los emails\nlet emails = data.match(emailRegex) || [];\n\n// Lista de dominios y patrones que queremos excluir\nconst exclusionPatterns = [\n  /@sentry(\\.|\\-next\\.)?wixpress\\.com$/,\n  /@sentry\\.io$/,\n  /@sentry\\.dev\\.apps\\.qdqmedia\\.com$/,\n  /^.*@.*\\.(png|jpg|jpeg|webp)$/i\n];\n\n// Filtrar los emails que coincidan con alguno de los patrones de exclusión\nemails = emails.filter(email => !exclusionPatterns.some(pattern => pattern.test(email)));\n\nconsole.log(emails);\n\nreturn { json: { emails: emails } };\n"
+      },
+      "id": "e1eed158-b5ba-4e64-8b29-b7e976b84b35",
+      "name": "Code1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        420,
+        440
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "a3efc513-1f0a-4a03-be72-242150e510db",
+      "name": "Loop Over Items1",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        100,
+        440
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.google.com/maps/search/{{ $json.output.busqueda }}",
+        "options": {}
+      },
+      "id": "5b712a5b-19a2-43fa-8e3a-aabbe4decdf2",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1040,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "emails"
+            }
+          ]
+        },
+        "options": {
+          "mergeLists": true
+        }
+      },
+      "id": "1275f5b6-0cd9-4134-9adf-76a97f7f626b",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        280,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "emails",
+        "options": {}
+      },
+      "id": "6f65cc33-2013-4bee-960a-0c22451138e6",
+      "name": "Remove Duplicates1",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        720,
+        220
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "formTitle": "Buscador de negocios locales",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "¿En que tipo de negocio estás interesado? Elige 1 solo",
+              "placeholder": "Dentista, abogado, pizzeria, restaurante..."
+            },
+            {
+              "fieldLabel": "¿En que ubicación? Elige 1",
+              "placeholder": "Barcelona, Madrid..."
+            },
+            {
+              "fieldLabel": "Correo electronico",
+              "fieldType": "email"
+            }
+          ]
+        },
+        "options": {
+          "buttonLabel": "Scrapear!!!",
+          "ignoreBots": true
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -1860,
+        260
+      ],
+      "id": "76c1d1d2-e914-4717-b45f-baaecd11c96a",
+      "name": "On form submission",
+      "webhookId": "4fdde290-52f4-4923-b373-9593ead41291"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Dame una lista de 10 terminos de busqueda para la palabra clave \"{{ $json['¿En que tipo de negocio estás interesado? Elige 1 solo'] }}\" para 10 subareas de {{ $json['¿En que ubicación? Elige 1'] }}. La salida debe de seguir la siguiente estructura JSON:\n\n{\n\"busqueda\": \"tipo+de+negocio+ciudad\"\n}\n\nEjemplo:\n\n{\n\"busqueda\": \"restaurante+italiano+las+rozas+madrid\"\n}\n\nImportante: Siempre tiene que haber un simbolo de más (+) entra cada palabra. Responde solo con el JSON",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Actua como un experto en generación de texto estructurado."
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        -1640,
+        260
+      ],
+      "id": "ceb5b426-dace-4ea5-adc0-92500750cf04",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"title\": \"Lista de búsquedas geolocalizadas\",\n  \"type\": \"array\",\n  \"items\": {\n    \"type\": \"object\",\n    \"properties\": {\n      \"output\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"busqueda\": {\n            \"type\": \"string\",\n            \"description\": \"Términos de búsqueda codificados con '+' para Google Maps\",\n            \"example\": \"chueca+madrid+restaurante+hindu\"\n          }\n        },\n        \"required\": [\"busqueda\"],\n        \"additionalProperties\": false\n      }\n    },\n    \"required\": [\"output\"],\n    \"additionalProperties\": false\n  }\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -1400,
+        480
+      ],
+      "id": "047f04d0-38a5-4d57-a21c-e5a71b9e2ab9",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -1260,
+        260
+      ],
+      "id": "397349f1-b9dd-4022-a3ae-9e64c5db42f2",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1EK1KLP2EiIaOzH6pifO0LpakxuIx9KdGJPGoIdOO1ew",
+          "mode": "list",
+          "cachedResultName": "Emails Scrapping",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EK1KLP2EiIaOzH6pifO0LpakxuIx9KdGJPGoIdOO1ew/edit?usp=drivesdk"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {}
+          },
+          "fileName": "=Scraping -  {{ $('On form submission').first().json['¿En que tipo de negocio estás interesado? Elige 1 solo'] }}, {{ $('On form submission').first().json['¿En que ubicación? Elige 1'] }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1380,
+        300
+      ],
+      "id": "a27233dc-c43e-4b16-ba27-2f785d1d6e4f",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3Q0e017jHUjgErF9",
+          "name": "mmserrano95 Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        300
+      ],
+      "id": "0905591a-d42c-4cb7-abff-385c72901496",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1EK1KLP2EiIaOzH6pifO0LpakxuIx9KdGJPGoIdOO1ew",
+          "mode": "list",
+          "cachedResultName": "Emails Scrapping",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EK1KLP2EiIaOzH6pifO0LpakxuIx9KdGJPGoIdOO1ew/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EK1KLP2EiIaOzH6pifO0LpakxuIx9KdGJPGoIdOO1ew/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Emails": "={{ $json.emails }}"
+          },
+          "matchingColumns": [
+            "Emails"
+          ],
+          "schema": [
+            {
+              "id": "Emails",
+              "displayName": "Emails",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        960,
+        300
+      ],
+      "id": "797e01a0-f777-41cb-9d49-5f592277c790",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hQxHxKsDYb0eEL2q",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1EK1KLP2EiIaOzH6pifO0LpakxuIx9KdGJPGoIdOO1ew",
+          "mode": "list",
+          "cachedResultName": "Emails Scrapping",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EK1KLP2EiIaOzH6pifO0LpakxuIx9KdGJPGoIdOO1ew/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EK1KLP2EiIaOzH6pifO0LpakxuIx9KdGJPGoIdOO1ew/edit#gid=0"
+        },
+        "numberToDelete": 1000
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2120,
+        340
+      ],
+      "id": "6d5fd419-13f1-443b-ba46-71d087c0ecaf",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hQxHxKsDYb0eEL2q",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1660,
+        480
+      ],
+      "id": "ef61f948-e867-4686-b48c-6643a15c218f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "uHnnL2xoHkYQ528m",
+          "name": "Gemini API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const allItems = $input.all();\nconst results = [];\n\nfor (const item of allItems) {\n  const data = item.json.data;\n  const regex = /https?:\\/\\/[^\\/]+/g;\n  const urls = data.match(regex) || [];\n\n  // Extraer nombre del lugar\n  const nameMatch = data.match(/<meta content=\"([^\"]+)\" itemprop=\"name\">/);\n  const name = nameMatch ? nameMatch[1] : null;\n\n  // Extraer descripción\n  const descMatch = data.match(/<meta content=\"([^\"]+)\" name=\"Description\">/);\n  const description = descMatch ? descMatch[1] : null;\n\n  // Extraer título (og:title)\n  const titleMatch = data.match(/<meta content=\"([^\"]+)\" property=\"og:title\">/);\n  const title = titleMatch ? titleMatch[1] : null;\n\n  // Extraer todas las URLs\n  const urlMatches = data.match(/https?:\\/\\/[^\"' >]+/g) || [];\n\nfor (const url of urls) {\n  results.push({ \n      json: { \n        pagina_web: url,\n        nombre: name,\n        descripcion: description,\n        titulo: title,\n        urls: urlMatches\n      } });\n}\n}\n\nreturn results;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        360
+      ],
+      "id": "0a99357f-26da-41e8-b5ae-59a1bf1f4d1e",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "options": {
+          "fileName": "=emails-{{ $now.format('dd-MM-yyyy') }}.csv"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1640,
+        300
+      ],
+      "id": "d9b04cbc-790e-4e3b-98a6-53a05f12e2c4",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "fromEmail": "your@email.es",
+        "toEmail": "={{ $('On form submission').first().json['Correo electronico'] }}",
+        "subject": "=Scraping emails {{ $('On form submission').first().json['¿En que tipo de negocio estás interesado? Elige 1 solo'] }} - {{ $('On form submission').first().json['¿En que ubicación? Elige 1'] }}",
+        "html": "Hola! Adjunto encontraras el listado de emails.\n\nUn saludo,",
+        "options": {
+          "appendAttribution": false,
+          "attachments": "=data"
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1860,
+        360
+      ],
+      "id": "f5c736be-2d0e-4b6f-927a-febdc0731ff7",
+      "name": "Send email",
+      "webhookId": "979faa71-1e48-41cb-aca1-8f96c4e86e12",
+      "credentials": {
+        "smtp": {
+          "id": "bGmnVm8s1Fr7a0lk",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "emails",
+        "options": {}
+      },
+      "id": "fa17583b-8a25-47b1-b2fb-64d5d4bb7ece",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        500,
+        220
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates1": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b1ce8e5c04da7f5185dd4c2f1e26386329ea2f8084595de56b53334d661cd00e"
+  }
+}

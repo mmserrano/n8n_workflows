@@ -8,6 +8,16 @@ Each workflow is designed to be practical, clearly structured, and easy to integ
 
 ## 📦 Current Workflows
 
+### 📍 Lead Generation from Google Maps
+
+This workflow automates the extraction of business email addresses from Google Maps search results, using AI-powered search query generation and website scraping.
+
+- Uses Google Gemini for intelligent search query generation
+- Automatically extracts email addresses from business websites
+- Stores results in Google Sheets
+- Delivers results via email in CSV format
+- Includes a user-friendly form interface
+
 ### 🧠 AI Agent with Supabase + PostgreSQL
 
 - Accepts user input via webhook
